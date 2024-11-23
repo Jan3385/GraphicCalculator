@@ -208,7 +208,7 @@ async function DrawGraphSlowly(){
 
             //only await when drawing visible part of the graph
             if(y > yStart && y < -yStart){
-                await new Promise(r => setTimeout(r, xScale/100));
+                await new Promise(r => setTimeout(r, xScale));
             }
             ctx.stroke();
         }
