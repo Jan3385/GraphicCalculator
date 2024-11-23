@@ -1,5 +1,14 @@
 let formula = "(x**2)/5";
-
+function handleCanvasMouseWheel(event) {
+    if(event.deltaY < 0){
+        document.getElementById("yScale").value = Math.min(parseFloat(document.getElementById("yScale").value) + 1, 999);
+        document.getElementById("xScale").value = Math.min(parseFloat(document.getElementById("xScale").value) + 1, 999);
+    }else{
+        document.getElementById("yScale").value = Math.max(parseFloat(document.getElementById("yScale").value) - 1, 1);
+        document.getElementById("xScale").value = Math.max(parseFloat(document.getElementById("xScale").value) - 1, 1);
+    }
+    DrawGraph();
+  }
 function OnButtonPress(key){
     if(key == "backspace"){
         formula = formula.slice(0, -1);
@@ -17,10 +26,42 @@ function UpdateFormula(){
     let display = document.getElementById("formula-display");
 
     let displayFormula = formula;
+
+    //replace **
+    displayFormula = displayFormula.replaceAll('**', '<sup>');
+    const indexes = [...displayFormula.matchAll(new RegExp("<sup>", 'gi'))].map(a => a.index);
+    for(let i = 0; i < indexes.length; i++){
+        let number = GetNextNumberAt(indexes[i] + 5, displayFormula);
+        displayFormula = displayFormula.slice(0, indexes[i] + 5 + number.length) + '</sup>' + displayFormula.slice(indexes[i] + 5 + number.length);
+    }
     
     displayFormula = displayFormula.replaceAll('Math.', '');
 
-    display.innerHTML = 'f<sub>(x)</sub>=' + displayFormula;
+    display.innerHTML = 'f<sub>(x)</sub>= ' + displayFormula;
+}
+function GetNextNumberAt(index, str){
+    let number = '';
+    
+    if(index >= str.length) return number;
+
+    if(str[index] == '('){
+        while(index < str.length && str[index] != ')'){
+            number += str[index];
+            index++;
+        }
+        number += ')';
+        return number;
+    }
+    if(isNumber(str[index])){
+        while(index < str.length && isNumber(str[index])){
+            number += str[index];
+            index++;
+        }
+        return number;
+    }
+}
+function isNumber(str){
+    return /^\d+$/.test(str);
 }
 function DrawGraphBackground(){
     let canvas = document.getElementById("graph-canvas");

@@ -8,14 +8,15 @@
 </head>
 <body>
     <div class="container">
-        <canvas height="300px" width="500px" id="graph-canvas"></canvas>
-        <p class="formula" id="formula-display">f<sub>(x)</sub>=x<sup>2</sup></p>
+        <p class="info">(Canvas is scrollable)</p>
+        <canvas height="300px" width="500px" id="graph-canvas" onmousewheel="handleCanvasMouseWheel(event)"></canvas>
+        <p class="formula" id="formula-display">f<sub>(x)</sub>= x<sup>2</sup></p>
         <div class="options">
             <button onclick="DrawGraphSlowly()">Graph Slowly</button>
             <label for="xScale">Scale X</label>
-            <input type="number" id="xScale" value="50" onchange="DrawGraph()">
+            <input type="number" id="xScale" value="50" min="1" max="999" onchange="DrawGraph()" autocomplete="off">
             <label for="yScale">Scale Y</label>
-            <input type="number" id="yScale" value="50" onchange="DrawGraph()">
+            <input type="number" id="yScale" value="50" min="1" max="999" onchange="DrawGraph()" autocomplete="off">
         </div>
         <div class="button-container">
             <button onclick='OnButtonPress("7")'>7</button>
