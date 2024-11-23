@@ -14,6 +14,9 @@ function handleCanvasMouseWheel(event) {
 function OnButtonPress(key){
     if(key == "backspace"){
         formula = formula.slice(0, -1);
+        if(formula[formula.length -1] == '.'){
+            formula = formula.slice(0, -5);
+        }
     }
     else if(key == "clear"){
         formula = '';
@@ -153,12 +156,12 @@ function DrawGraph(){
 
     //try to render the graph
     try{
-        for(let x = xStart; x < -xStart; x += 0.1){
+        for(let x = xStart; x < -xStart; x += 0.03){
             let y = eval(formula);
             const xPos = halfWidth + x * xScale;
             const yPos = halfHeight - y * yScale;
             //dont draw if the distance is too extreme (prevents false drawing when going from one infinity to another (eg. 1/x))
-            if(Math.sqrt((PreviousLinePos[0] - xPos)**2 + (PreviousLinePos[1] - yPos)**2) < 800)
+            if(Math.abs(PreviousLinePos[1] - yPos) < Math.abs(yScale * 100))
                 ctx.lineTo(xPos, yPos);
             else
                 ctx.moveTo(xPos, yPos);
@@ -193,14 +196,14 @@ async function DrawGraphSlowly(){
 
     //try to render the graph
     try{
-        for(let x = xStart; x < -xStart; x += 0.1){
+        for(let x = xStart; x < -xStart; x += 0.01){
             if(!shouldDrawGraphSlowly) return
 
             let y = eval(formula);
             const xPos = halfWidth + x * xScale;
             const yPos = halfHeight - y * yScale;
             //dont draw if the distance is too extreme (prevents false drawing when going from one infinity to another (eg. 1/x))
-            if(Math.sqrt((PreviousLinePos[0] - xPos)**2 + (PreviousLinePos[1] - yPos)**2) < 800)
+            if(Math.abs(PreviousLinePos[1] - yPos) < Math.abs(yScale * 100))
                 ctx.lineTo(xPos, yPos);
             else
                 ctx.moveTo(xPos, yPos);
@@ -208,7 +211,7 @@ async function DrawGraphSlowly(){
 
             //only await when drawing visible part of the graph
             if(y > yStart && y < -yStart){
-                await new Promise(r => setTimeout(r, xScale));
+                await new Promise(r => setTimeout(r, xScale/10));
             }
             ctx.stroke();
         }
@@ -229,6 +232,6 @@ const backgroundColors = [
 ]
 setInterval(() => {
     document.body.style.backgroundColor = backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
-}, 5000);
+}, 15000);
 
 DrawGraph();
