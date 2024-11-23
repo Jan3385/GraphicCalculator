@@ -8,37 +8,46 @@
 </head>
 <body>
     <div class="container">
-        <canvas height="300px" width="500px"></canvas>
-        <p class="formula">f<sub>(x)</sub>=x<sup>2</sup></p>
+        <canvas height="300px" width="500px" id="graph-canvas"></canvas>
+        <p class="formula" id="formula-display">f<sub>(x)</sub>=x<sup>2</sup></p>
+        <div class="options">
+            <button onclick="DrawGraphSlowly()">Graph Slowly</button>
+            <label for="xScale">Scale X</label>
+            <input type="number" id="xScale" value="50" onchange="DrawGraph()">
+            <label for="yScale">Scale Y</label>
+            <input type="number" id="yScale" value="50" onchange="DrawGraph()">
+        </div>
         <div class="button-container">
-            <button>7</button>
-            <button>8</button>
-            <button>9</button>
-            <button>+</button>
-            <button>/</button>
-            <button>4</button>
-            <button>5</button>
-            <button>6</button>
-            <button>-</button>
-            <button>*</button>
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>(</button>
-            <button>)</button>
-            <button>axis</button> <!-- changes axis from numeral to PI -->
-            <button>0</button>
-            <button>.</button>
-            <button>x</button>
-            <button>root√</button>
-            <button>sin</button>
-            <button>cos</button>
-            <button>tan</button>
-            <button>π</button>
-            <button>^</button>
-            <button style="grid-column: 1 / span 5;">backspace</button>
+            <button onclick='OnButtonPress("7")'>7</button>
+            <button onclick='OnButtonPress("8")'>8</button>
+            <button onclick='OnButtonPress("9")'>9</button>
+            <button onclick='OnButtonPress("+")'>+</button>
+            <button onclick='OnButtonPress("/")'>/</button>
+            <button onclick='OnButtonPress("4")'>4</button>
+            <button onclick='OnButtonPress("5")'>5</button>
+            <button onclick='OnButtonPress("6")'>6</button>
+            <button onclick='OnButtonPress("-")'>-</button>
+            <button onclick='OnButtonPress("*")'>*</button>
+            <button onclick='OnButtonPress("1")'>1</button>
+            <button onclick='OnButtonPress("2")'>2</button>
+            <button onclick='OnButtonPress("3")'>3</button>
+            <button onclick='OnButtonPress("(")'>(</button>
+            <button onclick='OnButtonPress(")")'>)</button>
+            <button onclick='OnButtonPress("axis")'>axis</button> <!-- changes axis from numeral to PI -->
+            <button onclick='OnButtonPress("0")'>0</button>
+            <button onclick='OnButtonPress(".")'>.</button>
+            <button onclick='OnButtonPress("x")'>x</button>
+            <button onclick='OnButtonPress("Math.sqrt(")'>root</button>
+            <button onclick='OnButtonPress("Math.sin(")'>sin</button>
+            <button onclick='OnButtonPress("Math.cos(")'>cos</button>
+            <button onclick='OnButtonPress("Math.tan(")'>tan</button>
+            <button onclick='OnButtonPress("Math.PI")'>π</button>
+            <button onclick='OnButtonPress("**")'>^</button>
+            <button onclick='OnButtonPress("clear")' style="grid-column: 1 / span 2;">clear</button>
+            <button onclick='OnButtonPress("backspace")' style="grid-column: 3 / span 3;">backspace</button>
             <!-- <button style="grid-column: 4 / span 2;">=</button> -->
         </div>
     </div>
+    <script src="calculator.js"></script>
 </body>
 </html>
