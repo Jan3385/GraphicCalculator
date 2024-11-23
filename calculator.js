@@ -1,4 +1,4 @@
-let formula = "(x**2)/5";
+let formula = "Math.sin(x)**3";
 let ShouldDrawGraphSlowly = false;
 let NumericAxis = true;
 function handleCanvasMouseWheel(event) {

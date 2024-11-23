@@ -10,7 +10,7 @@
     <div class="container">
         <p class="info">(Canvas is scrollable)</p>
         <canvas height="300px" width="500px" id="graph-canvas" onmousewheel="handleCanvasMouseWheel(event)"></canvas>
-        <p class="formula" id="formula-display">f<sub>(x)</sub>= x<sup>2</sup></p>
+        <p class="formula" id="formula-display">f<sub>(x)</sub>= sin(x)<sup>3</sup></p>
         <div class="options">
             <button onclick="DrawGraphSlowly()">Graph Slowly</button>
             <label for="xScale">Scale X</label>
@@ -46,7 +46,6 @@
             <button onclick='OnButtonPress("**")'>^</button>
             <button class="special" onclick='OnButtonPress("clear")' style="grid-column: 1 / span 2;">clear</button>
             <button class="special" onclick='OnButtonPress("backspace")' style="grid-column: 3 / span 3;">backspace</button>
-            <!-- <button style="grid-column: 4 / span 2;">=</button> -->
         </div>
     </div>
     <script src="calculator.js"></script>
