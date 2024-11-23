@@ -1,4 +1,5 @@
 let formula = "(x**2)/5";
+let ShouldDrawGraphSlowly = false;
 function handleCanvasMouseWheel(event) {
     if(event.deltaY < 0){
         document.getElementById("yScale").value = Math.min(parseFloat(document.getElementById("yScale").value) + 1, 999);
@@ -127,6 +128,7 @@ function DrawGraphBackground(){
     ctx.stroke();
 }
 function DrawGraph(){
+    ShouldDrawGraphSlowly = false;
     DrawGraphBackground();
     let canvas = document.getElementById("graph-canvas");
     let ctx = canvas.getContext("2d");
@@ -158,6 +160,8 @@ function DrawGraph(){
 }
 
 async function DrawGraphSlowly(){
+    if(ShouldDrawGraphSlowly) return;
+    ShouldDrawGraphSlowly = true;
     DrawGraphBackground();
     let canvas = document.getElementById("graph-canvas");
     let ctx = canvas.getContext("2d");
@@ -178,17 +182,22 @@ async function DrawGraphSlowly(){
     //try to render the graph
     try{
         for(let x = xStart; x < -xStart; x += 0.1){
+            if(!ShouldDrawGraphSlowly) return
+
             let y = eval(formula);
             ctx.lineTo(halfWidth + x * xScale, halfHeight - y * yScale);
 
             //only await when drawing visible part of the graph
             if(y > yStart && y < -yStart){
-                await new Promise(r => setTimeout(r, 1));
+                await new Promise(r => setTimeout(r, xScale/100));
             }
             ctx.stroke();
         }
     }catch(e){
         //console.log(e);
+    }
+    finally{
+        ShouldDrawGraphSlowly = false;
     }
 }
 
