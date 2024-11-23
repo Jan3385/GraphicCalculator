@@ -1,6 +1,6 @@
 let formula = "Math.sin(x)**3";
-let ShouldDrawGraphSlowly = false;
-let NumericAxis = true;
+let shouldDrawGraphSlowly = false;
+let numericAxis = true;
 function handleCanvasMouseWheel(event) {
     if(event.deltaY < 0){
         document.getElementById("yScale").value = Math.min(parseFloat(document.getElementById("yScale").value) + 1, 999);
@@ -18,7 +18,7 @@ function OnButtonPress(key){
     else if(key == "clear"){
         formula = '';
     }else if(key == "axis"){
-        NumericAxis = !NumericAxis;
+        numericAxis = !numericAxis;
     }
     else{
         formula += key;
@@ -83,6 +83,7 @@ function DrawGraphBackground(){
 
     ctx.font = "12px Arial";
     ctx.fillStyle = "#2d3436";
+    ctx.strokeStyle = "#c8cbcc";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
@@ -90,33 +91,34 @@ function DrawGraphBackground(){
     const xStart = -250/xScale;
     for(let x = xStart; x < -xStart; x+= 50/xScale){
         if(x == 0) continue;
-        ctx.strokeStyle = "#636e72";
-        const number = NumericAxis ? Math.round(x*100)/100 : Math.round((x/Math.PI)*100)/100 + 'π';
-        ctx.fillText(number, halfWidth + x * xScale, halfHeight + 10);
-
         //number lines
         ctx.fillRect(halfWidth + x * xScale, halfHeight - 3, 1, 6);
         ctx.setLineDash([10, 10]);
         ctx.moveTo(halfWidth + x * xScale, 0);
         ctx.lineTo(halfWidth + x * xScale, canvas.height);
-        ctx.stroke();
+
+        //number text
+        const number = numericAxis ? Math.round(x*100)/100 : Math.round((x/Math.PI)*100)/100 + 'π';
+        ctx.fillText(number, halfWidth + x * xScale, halfHeight + 10);
     }
+    ctx.stroke();
 
     //numbers on y axis
     ctx.textAlign = "right";
-    ctx.strokeStyle = "#c8cbcc";
+    ctx.beginPath();
 
     const yStart = -250/yScale;
     for(let y = yStart; y < -yStart; y+= 50/yScale){
-        ctx.fillText(Math.round(-y*100)/100, halfWidth - 2, halfHeight + y * yScale + 10);
-
         //number lines
         ctx.fillRect(halfWidth - 3, halfHeight + y * yScale, 6, 1);
         ctx.setLineDash([10, 10]);
         ctx.moveTo(0, halfHeight + y * yScale);
         ctx.lineTo(canvas.width, halfHeight + y * yScale);
-        ctx.stroke();
+
+        //number text
+        ctx.fillText(Math.round(-y*100)/100, halfWidth - 2, halfHeight + y * yScale + 10);
     }
+    ctx.stroke();
     ctx.setLineDash([]);
 
     //render static background
@@ -133,7 +135,7 @@ function DrawGraphBackground(){
 }
 let PreviousLinePos = [0, 0];
 function DrawGraph(){
-    ShouldDrawGraphSlowly = false;
+    shouldDrawGraphSlowly = false;
     DrawGraphBackground();
     let canvas = document.getElementById("graph-canvas");
     let ctx = canvas.getContext("2d");
@@ -171,8 +173,8 @@ function DrawGraph(){
 }
 
 async function DrawGraphSlowly(){
-    if(ShouldDrawGraphSlowly) return;
-    ShouldDrawGraphSlowly = true;
+    if(shouldDrawGraphSlowly) return;
+    shouldDrawGraphSlowly = true;
     DrawGraphBackground();
     let canvas = document.getElementById("graph-canvas");
     let ctx = canvas.getContext("2d");
@@ -192,7 +194,7 @@ async function DrawGraphSlowly(){
     //try to render the graph
     try{
         for(let x = xStart; x < -xStart; x += 0.1){
-            if(!ShouldDrawGraphSlowly) return
+            if(!shouldDrawGraphSlowly) return
 
             let y = eval(formula);
             const xPos = halfWidth + x * xScale;
@@ -214,7 +216,7 @@ async function DrawGraphSlowly(){
         //console.log(e);
     }
     finally{
-        ShouldDrawGraphSlowly = false;
+        shouldDrawGraphSlowly = false;
     }
 }
 
