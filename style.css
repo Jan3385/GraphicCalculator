@@ -2,8 +2,8 @@ body{
     margin: 0;
     padding: 0;
     font-family:'Courier New', Courier, monospace;
-    background-color: lightcoral;
-    /*transition: background-color 5s;*/
+    background-color: rgb(232, 129, 129);
+    transition: background-color 5s;
 }
 .container{
     width: min-content;

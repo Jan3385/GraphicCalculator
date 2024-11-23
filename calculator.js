@@ -219,5 +219,16 @@ async function DrawGraphSlowly(){
         shouldDrawGraphSlowly = false;
     }
 }
+const backgroundColors = [
+    "#e67d7c",
+    "#fab1a0",
+    "#f08baf",
+    "#86bdf0",
+    "#c5f5b3",
+    "#c59bf2"
+]
+setInterval(() => {
+    document.body.style.backgroundColor = backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
+}, 5000);
 
 DrawGraph();
