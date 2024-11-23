@@ -127,12 +127,12 @@ function DrawGraphBackground(){
 
     ctx.stroke();
 }
+let PreviousLinePos = [0, 0];
 function DrawGraph(){
     ShouldDrawGraphSlowly = false;
     DrawGraphBackground();
     let canvas = document.getElementById("graph-canvas");
     let ctx = canvas.getContext("2d");
-    ctx.beginPath();
 
     const halfWidth = canvas.width / 2;
     const halfHeight = canvas.height / 2;
@@ -149,7 +149,14 @@ function DrawGraph(){
     try{
         for(let x = xStart; x < -xStart; x += 0.1){
             let y = eval(formula);
-            ctx.lineTo(halfWidth + x * xScale, halfHeight - y * yScale);
+            const xPos = halfWidth + x * xScale;
+            const yPos = halfHeight - y * yScale;
+            //dont draw if the distance is too extreme (prevents false drawing when going from one infinity to another (eg. 1/x))
+            if(Math.sqrt((PreviousLinePos[0] - xPos)**2 + (PreviousLinePos[1] - yPos)**2) < 800)
+                ctx.lineTo(xPos, yPos);
+            else
+                ctx.moveTo(xPos, yPos);
+            PreviousLinePos = [xPos, yPos];
         }
     }catch(e){
         //console.log(e);
@@ -165,7 +172,6 @@ async function DrawGraphSlowly(){
     DrawGraphBackground();
     let canvas = document.getElementById("graph-canvas");
     let ctx = canvas.getContext("2d");
-    ctx.beginPath();
 
     const halfWidth = canvas.width / 2;
     const halfHeight = canvas.height / 2;
@@ -185,7 +191,14 @@ async function DrawGraphSlowly(){
             if(!ShouldDrawGraphSlowly) return
 
             let y = eval(formula);
-            ctx.lineTo(halfWidth + x * xScale, halfHeight - y * yScale);
+            const xPos = halfWidth + x * xScale;
+            const yPos = halfHeight - y * yScale;
+            //dont draw if the distance is too extreme (prevents false drawing when going from one infinity to another (eg. 1/x))
+            if(Math.sqrt((PreviousLinePos[0] - xPos)**2 + (PreviousLinePos[1] - yPos)**2) < 800)
+                ctx.lineTo(xPos, yPos);
+            else
+                ctx.moveTo(xPos, yPos);
+            PreviousLinePos = [xPos, yPos];
 
             //only await when drawing visible part of the graph
             if(y > yStart && y < -yStart){
