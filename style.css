@@ -120,4 +120,31 @@ canvas{
     button:active{
         background-color: #b6b6b6;
     }
+    .number{
+        background-color: #d4ddeb;
+    }
+    .number:hover{
+        background-color: #c4cbe2;
+    }
+    .number:active{
+        background-color: #a4abe2;
+    }
+    .function{
+        background-color: #e4d4d4;
+    }
+    .function:hover{
+        background-color: #d4c4c4;
+    }
+    .function:active{
+        background-color: #b4a4a4;
+    }
+    .special{
+        background-color: #cbcbcb;
+    }
+    .special:hover{
+        background-color: #bcbcbc;
+    }
+    .special:active{
+        background-color: #9b9b9b;
+    }
 }

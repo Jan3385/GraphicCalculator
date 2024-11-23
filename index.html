@@ -19,33 +19,33 @@
             <input type="number" id="yScale" value="50" min="1" max="999" onchange="DrawGraph()" autocomplete="off">
         </div>
         <div class="button-container">
-            <button onclick='OnButtonPress("7")'>7</button>
-            <button onclick='OnButtonPress("8")'>8</button>
-            <button onclick='OnButtonPress("9")'>9</button>
+            <button class="number" onclick='OnButtonPress("7")'>7</button>
+            <button class="number" onclick='OnButtonPress("8")'>8</button>
+            <button class="number" onclick='OnButtonPress("9")'>9</button>
             <button onclick='OnButtonPress("+")'>+</button>
             <button onclick='OnButtonPress("/")'>/</button>
-            <button onclick='OnButtonPress("4")'>4</button>
-            <button onclick='OnButtonPress("5")'>5</button>
-            <button onclick='OnButtonPress("6")'>6</button>
+            <button class="number" onclick='OnButtonPress("4")'>4</button>
+            <button class="number" onclick='OnButtonPress("5")'>5</button>
+            <button class="number" onclick='OnButtonPress("6")'>6</button>
             <button onclick='OnButtonPress("-")'>-</button>
             <button onclick='OnButtonPress("*")'>*</button>
-            <button onclick='OnButtonPress("1")'>1</button>
-            <button onclick='OnButtonPress("2")'>2</button>
-            <button onclick='OnButtonPress("3")'>3</button>
+            <button class="number" onclick='OnButtonPress("1")'>1</button>
+            <button class="number" onclick='OnButtonPress("2")'>2</button>
+            <button class="number" onclick='OnButtonPress("3")'>3</button>
             <button onclick='OnButtonPress("(")'>(</button>
             <button onclick='OnButtonPress(")")'>)</button>
-            <button onclick='OnButtonPress("axis")'>axis</button> <!-- changes axis from numeral to PI -->
-            <button onclick='OnButtonPress("0")'>0</button>
+            <button class="special" onclick='OnButtonPress("axis")'>axis</button> <!-- changes axis from numeral to PI -->
+            <button class="number" onclick='OnButtonPress("0")'>0</button>
             <button onclick='OnButtonPress(".")'>.</button>
             <button onclick='OnButtonPress("x")'>x</button>
-            <button onclick='OnButtonPress("Math.sqrt(")'>root</button>
-            <button onclick='OnButtonPress("Math.sin(")'>sin</button>
-            <button onclick='OnButtonPress("Math.cos(")'>cos</button>
-            <button onclick='OnButtonPress("Math.tan(")'>tan</button>
             <button onclick='OnButtonPress("Math.PI")'>π</button>
+            <button class="function" onclick='OnButtonPress("Math.sin(")'>sin</button>
+            <button class="function" onclick='OnButtonPress("Math.cos(")'>cos</button>
+            <button class="function" onclick='OnButtonPress("Math.tan(")'>tan</button>
+            <button class="function" onclick='OnButtonPress("Math.sqrt(")'>root</button>
             <button onclick='OnButtonPress("**")'>^</button>
-            <button onclick='OnButtonPress("clear")' style="grid-column: 1 / span 2;">clear</button>
-            <button onclick='OnButtonPress("backspace")' style="grid-column: 3 / span 3;">backspace</button>
+            <button class="special" onclick='OnButtonPress("clear")' style="grid-column: 1 / span 2;">clear</button>
+            <button class="special" onclick='OnButtonPress("backspace")' style="grid-column: 3 / span 3;">backspace</button>
             <!-- <button style="grid-column: 4 / span 2;">=</button> -->
         </div>
     </div>

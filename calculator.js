@@ -1,5 +1,6 @@
 let formula = "(x**2)/5";
 let ShouldDrawGraphSlowly = false;
+let NumericAxis = true;
 function handleCanvasMouseWheel(event) {
     if(event.deltaY < 0){
         document.getElementById("yScale").value = Math.min(parseFloat(document.getElementById("yScale").value) + 1, 999);
@@ -16,6 +17,8 @@ function OnButtonPress(key){
     }
     else if(key == "clear"){
         formula = '';
+    }else if(key == "axis"){
+        NumericAxis = !NumericAxis;
     }
     else{
         formula += key;
@@ -88,7 +91,8 @@ function DrawGraphBackground(){
     for(let x = xStart; x < -xStart; x+= 50/xScale){
         if(x == 0) continue;
         ctx.strokeStyle = "#636e72";
-        ctx.fillText(Math.round(x*100)/100, halfWidth + x * xScale, halfHeight + 10);
+        const number = NumericAxis ? Math.round(x*100)/100 : Math.round((x/Math.PI)*100)/100 + 'π';
+        ctx.fillText(number, halfWidth + x * xScale, halfHeight + 10);
 
         //number lines
         ctx.fillRect(halfWidth + x * xScale, halfHeight - 3, 1, 6);
