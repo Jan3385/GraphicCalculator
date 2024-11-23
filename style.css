@@ -1,0 +1,53 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family:'Courier New', Courier, monospace;
+    background-color: lightcoral;
+    transition: background-color 5s;
+}
+.container{
+    width: min-content;
+    margin: 10svh auto 10svh auto;
+    padding: 20px;
+    height: auto;
+    background-color: #f4f4f4;
+}
+canvas{
+    margin: auto;
+    display: block;
+    background-color: black;
+    width: 40dvw;
+}
+.formula{
+    background-color: gainsboro;
+}
+.button-container{
+    display: grid;
+    margin: auto;
+    margin-top: 1svh;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 10px;
+    padding: 10px;
+    background-color: rgb(241, 241, 241);
+    width: 100%-20px;
+    button{
+        width: 100%;
+        height: 5svh;
+        padding: 10px;
+        background-color: #f4f4f4;
+        border: solid rgb(175, 175, 175) 1px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        font-weight: bold;
+        color: rgb(95, 95, 95);
+        font-size: 2vmin;
+    }
+    button:hover{
+        background-color: #e4e4e4;
+    }
+    button:active{
+        background-color: #b6b6b6;
+    }
+}
