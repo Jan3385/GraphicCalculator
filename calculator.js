@@ -72,8 +72,8 @@ function UpdateFormula(){
     //remove "Math."
     displayFormula = displayFormula.replaceAll('Math.', '');
 
-    //add '↑' when the last substring is </sup>
-    if(displayFormula[displayFormula.length - 1] == '>') displayFormula += '↑';
+    //add '↑' when the last substring is </sup> and the power of a number does not have ')'
+    if(displayFormula[displayFormula.length - 1] == '>' && displayFormula[displayFormula.length - 6] == ')') displayFormula += '↑';
 
     display.innerHTML = 'f<sub>(x)</sub>= ' + displayFormula;
 }
