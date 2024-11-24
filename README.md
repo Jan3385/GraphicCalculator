@@ -9,6 +9,7 @@ Supports:
   *> All the goniometric functions*
   
   *> Scaling of both axis*
-  
+
+  *> Moving around the virtual space*
 
 ### Can be played [here](https://jan3385.github.io/GraphicCalculator/)
