@@ -1,4 +1,4 @@
-let formula = "Math.sin(x)**3";
+let formula = "Math.sin(x)**(1+2)";
 let shouldDrawGraphSlowly = false;
 let numericAxis = true;
 
@@ -29,9 +29,13 @@ function ResetView(){
 }
 function OnButtonPress(key){
     if(key == "backspace"){
+        const deletedKey = formula[formula.length - 1];
         formula = formula.slice(0, -1);
         if(formula[formula.length -1] == '.'){
             formula = formula.slice(0, -5);
+        }
+        if(deletedKey == "*" && formula[formula.length-1] == '*'){
+            formula = formula.slice(0, -1);
         }
     }
     else if(key == "clear"){
@@ -40,6 +44,8 @@ function OnButtonPress(key){
         numericAxis = !numericAxis;
     }
     else{
+        let DisplayedFormula = formula.replaceAll('Math.', '');
+        if(DisplayedFormula.length > 32) return;
         formula += key;
     }
     UpdateFormula();
@@ -52,13 +58,24 @@ function UpdateFormula(){
 
     //replace **
     displayFormula = displayFormula.replaceAll('**', '<sup>');
-    const indexes = [...displayFormula.matchAll(new RegExp("<sup>", 'gi'))].map(a => a.index);
-    for(let i = 0; i < indexes.length; i++){
-        let number = GetNextNumberAt(indexes[i] + 5, displayFormula);
-        displayFormula = displayFormula.slice(0, indexes[i] + 5 + number.length) + '</sup>' + displayFormula.slice(indexes[i] + 5 + number.length);
-    }
+    //const indexes = [...displayFormula.matchAll(new RegExp("<sup>", 'gi'))].map(a => a.index);
+    //for(let i = 0; i < indexes.length; i++){
+    //    let number = GetNextNumberAt(indexes[i] + 5, displayFormula);
+    //    displayFormula = displayFormula.slice(0, indexes[i] + 5 + number.length) + '</sup>' + displayFormula.slice(indexes[i] + 5 + number.length);
+    //}
+
+    let index = -1;
+    do{
+        index = displayFormula.indexOf('<sup>', index+1);
+        if(index == -1) break;
+        let number = GetNextNumberAt(index + 5, displayFormula);
+        console.log(number);
+        displayFormula = displayFormula.slice(0, index + 5 + number.length) + '</sup>' + displayFormula.slice(index + 5 + number.length);
+    }while(index != -1);
     
     displayFormula = displayFormula.replaceAll('Math.', '');
+
+    //if(displayFormula[displayFormula.length - 1] == '>') displayFormula += '↑';
 
     display.innerHTML = 'f<sub>(x)</sub>= ' + displayFormula;
 }
@@ -76,7 +93,7 @@ function GetNextNumberAt(index, str){
         return number;
     }
     if(isNumber(str[index])){
-        while(index < str.length && isNumber(str[index])){
+        while(index < str.length && (isNumber(str[index]) || str[index] == '.')){
             number += str[index];
             index++;
         }
