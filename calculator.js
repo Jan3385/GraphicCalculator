@@ -58,12 +58,8 @@ function UpdateFormula(){
 
     //replace **
     displayFormula = displayFormula.replaceAll('**', '<sup>');
-    //const indexes = [...displayFormula.matchAll(new RegExp("<sup>", 'gi'))].map(a => a.index);
-    //for(let i = 0; i < indexes.length; i++){
-    //    let number = GetNextNumberAt(indexes[i] + 5, displayFormula);
-    //    displayFormula = displayFormula.slice(0, indexes[i] + 5 + number.length) + '</sup>' + displayFormula.slice(indexes[i] + 5 + number.length);
-    //}
 
+    //add ending </sup>
     let index = -1;
     do{
         index = displayFormula.indexOf('<sup>', index+1);
@@ -73,9 +69,11 @@ function UpdateFormula(){
         displayFormula = displayFormula.slice(0, index + 5 + number.length) + '</sup>' + displayFormula.slice(index + 5 + number.length);
     }while(index != -1);
     
+    //remove "Math."
     displayFormula = displayFormula.replaceAll('Math.', '');
 
-    //if(displayFormula[displayFormula.length - 1] == '>') displayFormula += '↑';
+    //add '↑' when the last substring is </sup>
+    if(displayFormula[displayFormula.length - 1] == '>') displayFormula += '↑';
 
     display.innerHTML = 'f<sub>(x)</sub>= ' + displayFormula;
 }
