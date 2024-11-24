@@ -1,5 +1,5 @@
 //let formula = "Math.sin(x)**(1+2)";
-let formulas = ["Math.sin(x)**(1+2)", "Math.sin(x)", "Math.cos(x)"];
+let formulas = ["Math.sin(x)**(1+2)"];
 const formulaColors = ["#e03143", "#4287f5", "#33b031", "#6c7578", "#c48639", "#8638c2"];
 let selectedFormula = 0;
 let shouldDrawGraphSlowly = false;
