@@ -130,7 +130,7 @@ function DrawGraphBackground(){
     ctx.beginPath();
 
     const yStart = -250/yScale;
-    const xLineOffset = Math.min(Math.max(canvasOffset[0]*xScale, -222), 248);
+    const xLineOffset = Math.min(Math.max(canvasOffset[0]*xScale, -210), 248);
     for(let y = yStart; y <= -yStart; y+= 1){
         //number lines
         ctx.fillRect(halfWidth - 3  + xLineOffset, halfHeight + y * yScale, 6, 1);
