@@ -40,7 +40,7 @@ function DeleteFormula(){
 
     let elements = document.getElementsByClassName("formulas-list")[0].childNodes;
     let element = Array.from(elements).find(e => e.id == "form"+formulas.length);
-    element.remove()
+    element.remove();
 
     DrawGraph();
 }
@@ -53,7 +53,7 @@ function AddFormula(){
     let formula = document.createElement("p");
     formula.className = "formula";
     formula.innerHTML = `f<sub>${formulas.length}</sub>(x)= `;
-    let x = formulas.length-1
+    let x = formulas.length-1;
     formula.addEventListener("click", () => SetFormula(x));
     element.appendChild(formula);
 
