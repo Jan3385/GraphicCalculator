@@ -96,7 +96,7 @@ canvas{
         grid-template-columns: 1fr 1fr;
     }
     .button-formula{
-        width: 80%;
+        width: 50%;
         margin: 2px auto 2px auto;
         height: 25px;
         background-color: #edeeee;

@@ -66,7 +66,7 @@ function AddFormula(){
 
     document.getElementById("formula-display").scrollBy(0, 100);
 
-    DrawGraph();
+    SetFormula(formulas.length-1);
 }
 function SetFormula(index){
     document.getElementById("selected").id = "";
