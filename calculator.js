@@ -189,16 +189,19 @@ function DrawGraphBackground(){
     ctx.lineWidth = 1;
     const xStart = (-250/xScale);
     const yLineOffset = Math.min(Math.max(canvasOffset[1]*yScale, -145), 125);
-    for(let x = xStart; x <= -xStart; x+= 1){
+    for(let x = xStart + (canvasOffset[0]%1); x <= -xStart; x+= 1){
 
         //number lines
         ctx.fillRect(halfWidth + x * xScale, halfHeight - 3 + yLineOffset, 1, 6);
-        ctx.setLineDash([10, 10]);
+        //ctx.setLineDash([10, 10]);
         ctx.moveTo(halfWidth + x * xScale, 0);
         ctx.lineTo(halfWidth + x * xScale, canvas.height);
 
         //number text
-        const number = numericAxis ? Math.round((x-canvasOffset[0])*100)/100 : Math.round(((x-canvasOffset[0])/Math.PI)*100)/100 + 'π';
+        //change between numbers and radians
+        const number = numericAxis ? 
+            Math.round((x - (canvasOffset[0]))*100)/100 : 
+            Math.round(((x)/Math.PI)*100)/100 + 'π';
         if(number == 0) continue;
         ctx.fillText(number, halfWidth + x * xScale, halfHeight + 10 + yLineOffset);
     }
@@ -210,10 +213,10 @@ function DrawGraphBackground(){
 
     const yStart = -250/yScale;
     const xLineOffset = Math.min(Math.max(canvasOffset[0]*xScale, -210), 248);
-    for(let y = yStart; y <= -yStart; y+= 1){
+    for(let y = yStart + (canvasOffset[1]%1); y <= -yStart; y+= 1){
         //number lines
         ctx.fillRect(halfWidth - 3  + xLineOffset, halfHeight + y * yScale, 6, 1);
-        ctx.setLineDash([10, 10]);
+        //ctx.setLineDash([10, 10]);
         ctx.moveTo(0, halfHeight + y * yScale);
         ctx.lineTo(canvas.width, halfHeight + y * yScale);
 
