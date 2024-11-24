@@ -1,16 +1,32 @@
 let formula = "Math.sin(x)**3";
 let shouldDrawGraphSlowly = false;
 let numericAxis = true;
+
+let canvasOffset = [0, 0];
+
 function handleCanvasMouseWheel(event) {
     if(event.deltaY < 0){
-        document.getElementById("yScale").value = Math.min(parseFloat(document.getElementById("yScale").value) + 1, 999);
-        document.getElementById("xScale").value = Math.min(parseFloat(document.getElementById("xScale").value) + 1, 999);
+        document.getElementById("yScale").value = Math.min(parseFloat(document.getElementById("yScale").value) + 1, 300);
+        document.getElementById("xScale").value = Math.min(parseFloat(document.getElementById("xScale").value) + 1, 300);
     }else{
-        document.getElementById("yScale").value = Math.max(parseFloat(document.getElementById("yScale").value) - 1, 1);
-        document.getElementById("xScale").value = Math.max(parseFloat(document.getElementById("xScale").value) - 1, 1);
+        document.getElementById("yScale").value = Math.max(parseFloat(document.getElementById("yScale").value) - 1, 25);
+        document.getElementById("xScale").value = Math.max(parseFloat(document.getElementById("xScale").value) - 1, 25);
     }
     DrawGraph();
-  }
+}
+function handleCanvasMouseMove(event){
+    if(event.buttons & 1 == 1){
+        canvasOffset[0] += event.movementX/40;
+        canvasOffset[1] += event.movementY/40;
+        DrawGraph();
+    }
+}
+function ResetView(){
+    canvasOffset = [0, 0];
+    document.getElementById("yScale").value = 50;
+    document.getElementById("xScale").value = 50;
+    DrawGraph();
+}
 function OnButtonPress(key){
     if(key == "backspace"){
         formula = formula.slice(0, -1);
@@ -79,10 +95,10 @@ function DrawGraphBackground(){
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     //render numbers
-    const halfWidth = canvas.width / 2;
-    const halfHeight = canvas.height / 2;
     const yScale = document.getElementById("yScale").value <= 0 ? 1 : document.getElementById("yScale").value;
     const xScale = document.getElementById("xScale").value <= 0 ? 1 : document.getElementById("xScale").value;
+    const halfWidth = canvas.width / 2;
+    const halfHeight = canvas.height / 2;
 
     ctx.font = "12px Arial";
     ctx.fillStyle = "#2d3436";
@@ -91,18 +107,21 @@ function DrawGraphBackground(){
     ctx.textBaseline = "middle";
 
     //numbers on x axis
-    const xStart = -250/xScale;
-    for(let x = xStart; x < -xStart; x+= 50/xScale){
-        if(x == 0) continue;
+    ctx.lineWidth = 1;
+    const xStart = (-250/xScale);
+    const yLineOffset = Math.min(Math.max(canvasOffset[1]*yScale, -145), 125);
+    for(let x = xStart; x <= -xStart; x+= 1){
+
         //number lines
-        ctx.fillRect(halfWidth + x * xScale, halfHeight - 3, 1, 6);
+        ctx.fillRect(halfWidth + x * xScale, halfHeight - 3 + yLineOffset, 1, 6);
         ctx.setLineDash([10, 10]);
         ctx.moveTo(halfWidth + x * xScale, 0);
         ctx.lineTo(halfWidth + x * xScale, canvas.height);
 
         //number text
-        const number = numericAxis ? Math.round(x*100)/100 : Math.round((x/Math.PI)*100)/100 + 'π';
-        ctx.fillText(number, halfWidth + x * xScale, halfHeight + 10);
+        const number = numericAxis ? Math.round((x-canvasOffset[0])*100)/100 : Math.round(((x-canvasOffset[0])/Math.PI)*100)/100 + 'π';
+        if(number == 0) continue;
+        ctx.fillText(number, halfWidth + x * xScale, halfHeight + 10 + yLineOffset);
     }
     ctx.stroke();
 
@@ -111,15 +130,16 @@ function DrawGraphBackground(){
     ctx.beginPath();
 
     const yStart = -250/yScale;
-    for(let y = yStart; y < -yStart; y+= 50/yScale){
+    const xLineOffset = Math.min(Math.max(canvasOffset[0]*xScale, -222), 248);
+    for(let y = yStart; y <= -yStart; y+= 1){
         //number lines
-        ctx.fillRect(halfWidth - 3, halfHeight + y * yScale, 6, 1);
+        ctx.fillRect(halfWidth - 3  + xLineOffset, halfHeight + y * yScale, 6, 1);
         ctx.setLineDash([10, 10]);
         ctx.moveTo(0, halfHeight + y * yScale);
         ctx.lineTo(canvas.width, halfHeight + y * yScale);
 
         //number text
-        ctx.fillText(Math.round(-y*100)/100, halfWidth - 2, halfHeight + y * yScale + 10);
+        ctx.fillText(Math.round((-y+canvasOffset[1])*100)/100, halfWidth - 2 + xLineOffset, halfHeight + y * yScale + 10);
     }
     ctx.stroke();
     ctx.setLineDash([]);
@@ -128,11 +148,11 @@ function DrawGraphBackground(){
     ctx.strokeStyle = "#636e72";
     ctx.beginPath();
     ctx.lineWidth = 2;
-    ctx.moveTo(halfWidth, 0);
-    ctx.lineTo(halfWidth, canvas.height);
+    ctx.moveTo(halfWidth + xLineOffset, 0);
+    ctx.lineTo(halfWidth + xLineOffset, canvas.height);
 
-    ctx.moveTo(0, halfHeight);
-    ctx.lineTo(canvas.width, halfHeight);
+    ctx.moveTo(0, halfHeight + yLineOffset);
+    ctx.lineTo(canvas.width, halfHeight + yLineOffset);
 
     ctx.stroke();
 }
@@ -156,16 +176,16 @@ function DrawGraph(){
 
     //try to render the graph
     try{
-        for(let x = xStart; x < -xStart; x += 0.03){
+        for(let x = xStart-canvasOffset[0]; x < -xStart-canvasOffset[0]; x += 0.03){
             let y = eval(formula);
-            const xPos = halfWidth + x * xScale;
-            const yPos = halfHeight - y * yScale;
+            const xPos = halfWidth + (x+canvasOffset[0]) * xScale;
+            const yPos = halfHeight - (y-canvasOffset[1]) * yScale;
             //dont draw if the distance is too extreme (prevents false drawing when going from one infinity to another (eg. 1/x))
             if(Math.abs(PreviousLinePos[1] - yPos) < Math.abs(yScale * 100))
-                ctx.lineTo(xPos, yPos);
+                ctx.lineTo(xPos, yPos+canvasOffset[1]);
             else
-                ctx.moveTo(xPos, yPos);
-            PreviousLinePos = [xPos, yPos];
+                ctx.moveTo(xPos, yPos+canvasOffset[1]);
+            PreviousLinePos = [xPos, yPos+canvasOffset[1]];
         }
     }catch(e){
         //console.log(e);
@@ -196,12 +216,12 @@ async function DrawGraphSlowly(){
 
     //try to render the graph
     try{
-        for(let x = xStart; x < -xStart; x += 0.01){
+        for(let x = xStart-canvasOffset[0]; x < -xStart-canvasOffset[0]; x += 0.01){
             if(!shouldDrawGraphSlowly) return
 
             let y = eval(formula);
-            const xPos = halfWidth + x * xScale;
-            const yPos = halfHeight - y * yScale;
+            const xPos = halfWidth + (x+canvasOffset[0]) * xScale;
+            const yPos = halfHeight - (y-canvasOffset[1]) * yScale;
             //dont draw if the distance is too extreme (prevents false drawing when going from one infinity to another (eg. 1/x))
             if(Math.abs(PreviousLinePos[1] - yPos) < Math.abs(yScale * 100))
                 ctx.lineTo(xPos, yPos);

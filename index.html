@@ -9,15 +9,16 @@
 </head>
 <body>
     <div class="container">
-        <p class="info">(Canvas is scrollable)</p>
-        <canvas height="300px" width="500px" id="graph-canvas" onmousewheel="handleCanvasMouseWheel(event)"></canvas>
+        <p class="info">(Try dragging and scrolling on the canvas!)</p>
+        <canvas height="300px" width="500px" id="graph-canvas" onmousewheel="handleCanvasMouseWheel(event)" onmousemove="handleCanvasMouseMove(event)"></canvas>
         <p class="formula" id="formula-display">f<sub>(x)</sub>= sin(x)<sup>3</sup></p>
         <div class="options">
-            <button onclick="DrawGraphSlowly()">Graph Slowly</button>
+            <button class="DrawGraphButton" onclick="DrawGraphSlowly()">Graph Slowly</button>
             <label for="xScale">Scale X</label>
-            <input type="number" id="xScale" value="50" min="1" max="999" onchange="DrawGraph()" autocomplete="off">
+            <input type="number" id="xScale" value="50" min="25" max="300" onchange="DrawGraph()" autocomplete="off">
+            <button class="ResetViewButton" onclick="ResetView()">Reset View</button>
             <label for="yScale">Scale Y</label>
-            <input type="number" id="yScale" value="50" min="1" max="999" onchange="DrawGraph()" autocomplete="off">
+            <input type="number" id="yScale" value="50" min="25" max="300" onchange="DrawGraph()" autocomplete="off">
         </div>
         <div class="button-container">
             <button class="number" onclick='OnButtonPress("7")'>7</button>
