@@ -40,9 +40,7 @@ function DeleteFormula(){
 
     let elements = document.getElementsByClassName("formulas-list")[0].childNodes;
     let element = Array.from(elements).find(e => e.id == "form"+formulas.length);
-    console.log(elements);
     element.remove()
-    
 
     DrawGraph();
 }
@@ -129,7 +127,6 @@ function UpdateFormula(index){
         sIndex = displayFormula.indexOf('<sup>', sIndex+1);
         if(sIndex == -1) break;
         let number = GetNextNumberAt(sIndex + 5, displayFormula);
-        console.log(number);
         displayFormula = displayFormula.slice(0, sIndex + 5 + number.length) + '</sup>' + displayFormula.slice(sIndex + 5 + number.length);
     }while(sIndex != -1);
     

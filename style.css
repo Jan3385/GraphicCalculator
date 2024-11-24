@@ -62,7 +62,7 @@ canvas{
         grid-template-columns: 10fr 1fr;
     }
     p{
-        background-color: rgba(0, 0, 0, 0.095);
+        background-color: rgba(0, 0, 0, 0.079);
         border-radius: 2px;
         padding: 0;
         padding-top: 1px;
@@ -70,6 +70,7 @@ canvas{
         display: inline-block;
         height: 25px;
         width: 99%;
+        border-radius: 3px;
         user-select: none;
     }
     .formula-color{
@@ -81,7 +82,7 @@ canvas{
         background-color: #e03143;
     }
     p#selected{
-        background-color: rgba(34, 47, 51, 0.28);
+        background-color: rgba(40, 88, 103, 0.192);
     }
     p:hover{
         background-color: rgba(0, 0, 0, 0.15);
