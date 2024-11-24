@@ -1,4 +1,7 @@
-let formula = "Math.sin(x)**(1+2)";
+//let formula = "Math.sin(x)**(1+2)";
+let formulas = ["Math.sin(x)**(1+2)", "Math.sin(x)", "Math.cos(x)"];
+const formulaColors = ["#e03143", "#4287f5", "#33b031", "#6c7578", "#c48639", "#8638c2"];
+let selectedFormula = 0;
 let shouldDrawGraphSlowly = false;
 let numericAxis = true;
 
@@ -27,8 +30,67 @@ function ResetView(){
     document.getElementById("xScale").value = 50;
     DrawGraph();
 }
+function DeleteFormula(){
+    if(formulas.length == 1) return;
+    formulas.splice(formulas.length-1);
+    if(selectedFormula >= formulas.length){
+        selectedFormula = formulas.length - 1;
+        document.getElementsByClassName("formula")[selectedFormula].id = "selected";
+    }
+
+    let elements = document.getElementsByClassName("formulas-list")[0].childNodes;
+    let element = Array.from(elements).find(e => e.id == "form"+formulas.length);
+    console.log(elements);
+    element.remove()
+    
+
+    DrawGraph();
+}
+function AddFormula(){
+    formulas.push('');
+    let element = document.createElement("div");
+    element.className = "formula-div";
+    element.id = "form" + (formulas.length-1);
+
+    let formula = document.createElement("p");
+    formula.className = "formula";
+    formula.innerHTML = `f<sub>${formulas.length}</sub>(x)= `;
+    let x = formulas.length-1
+    formula.addEventListener("click", () => SetFormula(x));
+    element.appendChild(formula);
+
+    let color = document.createElement("div");
+    color.className = "formula-color";
+    color.style.backgroundColor = formulaColors[(formulas.length-1) % formulaColors.length];
+    element.appendChild(color);
+
+    document.getElementsByClassName("formulas-list")[0].appendChild(element);
+
+    document.getElementById("formula-display").scrollBy(0, 100);
+
+    DrawGraph();
+}
+function SetFormula(index){
+    document.getElementById("selected").id = "";
+    selectedFormula = index;
+    document.getElementsByClassName("formula")[index].id = "selected";
+    DrawGraph();
+}
+function GetActiveFormula(){
+    console.assert(selectedFormula < formulas.length, "Selected formula is out of bounds");
+    return formulas[selectedFormula];
+}
+function SetActiveFormula(set){
+    console.assert(selectedFormula < formulas.length, "Selected formula is out of bounds");
+    formulas[selectedFormula] = set;
+}
+function AddToActiveFormula(add){
+    console.assert(selectedFormula < formulas.length, "Selected formula is out of bounds");
+    formulas[selectedFormula] += add;
+}
 function OnButtonPress(key){
     if(key == "backspace"){
+        let formula = GetActiveFormula();
         const deletedKey = formula[formula.length - 1];
         formula = formula.slice(0, -1);
         if(formula[formula.length -1] == '.'){
@@ -37,37 +99,39 @@ function OnButtonPress(key){
         if(deletedKey == "*" && formula[formula.length-1] == '*'){
             formula = formula.slice(0, -1);
         }
+        SetActiveFormula(formula);
     }
     else if(key == "clear"){
-        formula = '';
+        SetActiveFormula('');
     }else if(key == "axis"){
         numericAxis = !numericAxis;
     }
     else{
-        let DisplayedFormula = formula.replaceAll('Math.', '');
+        let DisplayedFormula = GetActiveFormula().replaceAll('Math.', '');
         if(DisplayedFormula.length > 32) return;
-        formula += key;
+        AddToActiveFormula(key);
     }
-    UpdateFormula();
+    UpdateFormula(selectedFormula);
     DrawGraph();
 }
-function UpdateFormula(){
-    let display = document.getElementById("formula-display");
+function UpdateFormula(index){
+    let elements = document.getElementsByClassName("formula");
+    let display = elements[index];
 
-    let displayFormula = formula;
+    let displayFormula = GetActiveFormula();
 
     //replace **
     displayFormula = displayFormula.replaceAll('**', '<sup>');
 
     //add ending </sup>
-    let index = -1;
+    let sIndex = -1;
     do{
-        index = displayFormula.indexOf('<sup>', index+1);
-        if(index == -1) break;
-        let number = GetNextNumberAt(index + 5, displayFormula);
+        sIndex = displayFormula.indexOf('<sup>', sIndex+1);
+        if(sIndex == -1) break;
+        let number = GetNextNumberAt(sIndex + 5, displayFormula);
         console.log(number);
-        displayFormula = displayFormula.slice(0, index + 5 + number.length) + '</sup>' + displayFormula.slice(index + 5 + number.length);
-    }while(index != -1);
+        displayFormula = displayFormula.slice(0, sIndex + 5 + number.length) + '</sup>' + displayFormula.slice(sIndex + 5 + number.length);
+    }while(sIndex != -1);
     
     //remove "Math."
     displayFormula = displayFormula.replaceAll('Math.', '');
@@ -75,7 +139,7 @@ function UpdateFormula(){
     //add '↑' when the last substring is </sup> and the power of a number does not have ')'
     if(displayFormula[displayFormula.length - 1] == '>' && displayFormula[displayFormula.length - 6] == ')') displayFormula += '↑';
 
-    display.innerHTML = 'f<sub>(x)</sub>= ' + displayFormula;
+    display.innerHTML = `f<sub>${index+1}</sub>(x)= ` + displayFormula;
 }
 function GetNextNumberAt(index, str){
     let number = '';
@@ -184,29 +248,29 @@ function DrawGraph(){
     const xScale = document.getElementById("xScale").value <= 0 ? 1 : document.getElementById("xScale").value;
     const xStart = -250/xScale;
 
-    //render graph
-    ctx.strokeStyle = "#2d3436";
-    ctx.beginPath();
-    ctx.lineWidth = 2;
-
-    //try to render the graph
+    //render graphs
     try{
-        for(let x = xStart-canvasOffset[0]; x < -xStart-canvasOffset[0]; x += 0.03){
-            let y = eval(formula);
-            const xPos = halfWidth + (x+canvasOffset[0]) * xScale;
-            const yPos = halfHeight - (y-canvasOffset[1]) * yScale;
-            //dont draw if the distance is too extreme (prevents false drawing when going from one infinity to another (eg. 1/x))
-            if(Math.abs(PreviousLinePos[1] - yPos) < Math.abs(yScale * 100))
-                ctx.lineTo(xPos, yPos+canvasOffset[1]);
-            else
-                ctx.moveTo(xPos, yPos+canvasOffset[1]);
-            PreviousLinePos = [xPos, yPos+canvasOffset[1]];
+        for(const formula of formulas){
+            ctx.beginPath();
+            const transparency = formula == GetActiveFormula() ? (255).toString(16) : (180).toString(16);
+            ctx.strokeStyle = formulaColors[formulas.indexOf(formula)%formulaColors.length] + transparency;
+            ctx.lineWidth = 2;
+            for(let x = xStart-canvasOffset[0]; x < -xStart-canvasOffset[0]; x += 0.03){
+                
+                let y = eval(formula);
+                const xPos = halfWidth + (x+canvasOffset[0]) * xScale;
+                const yPos = halfHeight - (y-canvasOffset[1]) * yScale;
+                //dont draw if the distance is too extreme (prevents false drawing when going from one infinity to another (eg. 1/x))
+                if(Math.abs(PreviousLinePos[1] - yPos) < Math.abs(yScale * 100))
+                    ctx.lineTo(xPos, yPos+canvasOffset[1]);
+                else
+                    ctx.moveTo(xPos, yPos+canvasOffset[1]);
+                PreviousLinePos = [xPos, yPos+canvasOffset[1]];
+            }
+            ctx.stroke();     
         }
     }catch(e){
         //console.log(e);
-    }
-    finally{
-        ctx.stroke();
     }
 }
 
@@ -231,24 +295,30 @@ async function DrawGraphSlowly(){
 
     //try to render the graph
     try{
-        for(let x = xStart-canvasOffset[0]; x < -xStart-canvasOffset[0]; x += 0.01){
-            if(!shouldDrawGraphSlowly) return
+        for(const formula of formulas){
+            ctx.beginPath();
+            const transparency = formula == GetActiveFormula() ? (255).toString(16) : (180).toString(16);
+            ctx.strokeStyle = formulaColors[formulas.indexOf(formula)%formulaColors.length] + transparency;
+            ctx.lineWidth = 2;
+            for(let x = xStart-canvasOffset[0]; x < -xStart-canvasOffset[0]; x += 0.01*formulas.length){
+                if(!shouldDrawGraphSlowly) return
 
-            let y = eval(formula);
-            const xPos = halfWidth + (x+canvasOffset[0]) * xScale;
-            const yPos = halfHeight - (y-canvasOffset[1]) * yScale;
-            //dont draw if the distance is too extreme (prevents false drawing when going from one infinity to another (eg. 1/x))
-            if(Math.abs(PreviousLinePos[1] - yPos) < Math.abs(yScale * 100))
-                ctx.lineTo(xPos, yPos);
-            else
-                ctx.moveTo(xPos, yPos);
-            PreviousLinePos = [xPos, yPos];
+                let y = eval(formula);
+                const xPos = halfWidth + (x+canvasOffset[0]) * xScale;
+                const yPos = halfHeight - (y-canvasOffset[1]) * yScale;
+                //dont draw if the distance is too extreme (prevents false drawing when going from one infinity to another (eg. 1/x))
+                if(Math.abs(PreviousLinePos[1] - yPos) < Math.abs(yScale * 100))
+                    ctx.lineTo(xPos, yPos);
+                else
+                    ctx.moveTo(xPos, yPos);
+                PreviousLinePos = [xPos, yPos];
 
-            //only await when drawing visible part of the graph
-            if(y > yStart && y < -yStart){
-                await new Promise(r => setTimeout(r, xScale/10));
+                //only await when drawing visible part of the graph
+                if(y > yStart && y < -yStart){
+                    await new Promise(r => setTimeout(r, xScale/10));
+                }
+                ctx.stroke();
             }
-            ctx.stroke();
         }
     }catch(e){
         //console.log(e);

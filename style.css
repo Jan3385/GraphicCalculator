@@ -45,14 +45,75 @@ canvas{
     margin: 0;
     text-align: center;
     user-select: none;
+    font-size: 12px;
 }
-.formula {
-    background-color: rgb(228, 227, 227);
+.formulas {
+    background-color: rgb(215, 221, 231);
     border-radius: 2px;
-    padding: 3px;
-    display: inline-block;
-    height: 100%;
-    width: 100%;
+    padding: 5px;
+    margin: 5px auto 5px auto;
+    display: block;
+    height: 10dvh;
+    width: 97%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    .formula-div{
+        display: grid;
+        grid-template-columns: 10fr 1fr;
+    }
+    p{
+        background-color: rgba(0, 0, 0, 0.095);
+        border-radius: 2px;
+        padding: 0;
+        padding-top: 1px;
+        margin: 2px;
+        display: inline-block;
+        height: 25px;
+        width: 99%;
+        user-select: none;
+    }
+    .formula-color{
+        width: 23px;
+        height: 23px;
+        margin: auto;
+        padding: 0;
+        border-radius: 8px;
+        background-color: #e03143;
+    }
+    p#selected{
+        background-color: rgba(34, 47, 51, 0.28);
+    }
+    p:hover{
+        background-color: rgba(0, 0, 0, 0.15);
+    }
+    p:active{
+        background-color: rgba(0, 0, 0, 0.25);
+    }
+    .formula-buttons{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .button-formula{
+        width: 80%;
+        margin: 2px auto 2px auto;
+        height: 25px;
+        background-color: #ffffff50;
+        border: solid rgb(130, 130, 130) 1px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        user-select: none;
+        img{
+            aspect-ratio: 1/1;
+            height: 100%;
+        }
+    }
+    button:hover{
+        background-color: #c4c4c470;
+    }
+    button:active{
+        background-color: #ffffff30;
+    }
 }
 .options{
     display: grid;
@@ -63,7 +124,7 @@ canvas{
     button{
         width: 70%;
         margin: 5px auto 5px auto;
-        height: max(5svh, 40px);
+        height: max(3svh, 25px);
         background-color: #f4f4f4;
         border: solid rgb(175, 175, 175) 1px;
         border-radius: 5px;
@@ -73,6 +134,8 @@ canvas{
 
         font-weight: bold;
         color: rgb(95, 95, 95);
+
+        font-size: 13px;
     }
     button:hover{
         background-color: #e4e4e4;
@@ -89,7 +152,7 @@ canvas{
     }
     input{
         width: max(80%, 20px);
-        height: 0.8svh;
+        height: 0.3svh;
         padding: 10px;
         margin: 0 0 4px 0;
         background-color: #f4f4f4;

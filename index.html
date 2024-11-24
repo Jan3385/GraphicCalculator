@@ -12,7 +12,26 @@
     <div class="container">
         <p class="info">(Try dragging and scrolling on the canvas!)</p>
         <canvas height="300px" width="500px" id="graph-canvas" onmousewheel="handleCanvasMouseWheel(event)" onmousemove="handleCanvasMouseMove(event)"></canvas>
-        <p class="formula" id="formula-display">f<sub>(x)</sub>= sin(x)<sup>(1+2)</sup></p>
+        <div class="formulas" id="formula-display">
+            <div class="formulas-list">
+                <div class="formula-div" id="form0">
+                    <p onclick="SetFormula(0)" class="formula" id="selected">f<sub>1</sub>(x)= sin(x)<sup>(1+2)</sup></p>
+                    <div class="formula-color"></div>
+                </div>
+                <div class="formula-div" id="form1">
+                    <p onclick="SetFormula(1)" class="formula" >f<sub>2</sub>(x)= sin(x)</p>
+                    <div class="formula-color"></div>
+                </div>
+                <div class="formula-div" id="form2">
+                    <p onclick="SetFormula(2)" class="formula" >f<sub>3</sub>(x)= cos(x)</p>
+                    <div class="formula-color"></div>
+                </div>
+            </div>
+            <div class="formula-buttons">
+                <button onclick="DeleteFormula()" class="button-formula"><img src="minus-circle.svg"></button>
+                <button onclick="AddFormula()" class="button-formula"><img src="plus-circle.svg"></button>
+            </div>
+        </div>
         <div class="options">
             <button class="DrawGraphButton" onclick="DrawGraphSlowly()">Graph Slowly</button>
             <label for="xScale">Scale X</label>
