@@ -105,8 +105,6 @@ function OnButtonPress(key){
         numericAxis = !numericAxis;
     }
     else{
-        let DisplayedFormula = GetActiveFormula().replaceAll('Math.', '');
-        if(DisplayedFormula.length > 32) return;
         AddToActiveFormula(key);
     }
     UpdateFormula(selectedFormula);
@@ -249,13 +247,14 @@ function DrawGraph(){
     const xStart = -250/xScale;
 
     //render graphs
+    const graphStep = formulas <= 3 ? 0.03 : 0.01*formulas.length;
     try{
         for(const formula of formulas){
             ctx.beginPath();
-            const transparency = formula == GetActiveFormula() ? (255).toString(16) : (180).toString(16);
+            const transparency = formula == GetActiveFormula() ? (255).toString(16) : (140).toString(16);
             ctx.strokeStyle = formulaColors[formulas.indexOf(formula)%formulaColors.length] + transparency;
             ctx.lineWidth = 2;
-            for(let x = xStart-canvasOffset[0]; x < -xStart-canvasOffset[0]; x += 0.03){
+            for(let x = xStart-canvasOffset[0]; x < -xStart-canvasOffset[0]; x += graphStep){
                 
                 let y = eval(formula);
                 const xPos = halfWidth + (x+canvasOffset[0]) * xScale;

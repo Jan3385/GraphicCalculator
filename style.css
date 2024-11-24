@@ -68,7 +68,8 @@ canvas{
         padding-top: 1px;
         margin: 2px;
         display: inline-block;
-        height: 25px;
+        word-break: break-all;
+        height: min-content;
         width: 99%;
         border-radius: 3px;
         user-select: none;
@@ -98,7 +99,7 @@ canvas{
         width: 80%;
         margin: 2px auto 2px auto;
         height: 25px;
-        background-color: #ffffff50;
+        background-color: #edeeee;
         border: solid rgb(130, 130, 130) 1px;
         border-radius: 5px;
         cursor: pointer;
@@ -109,11 +110,11 @@ canvas{
             height: 100%;
         }
     }
-    button:hover{
-        background-color: #c4c4c470;
+    .button-formula:hover{
+        background-color: #c5dae1;
     }
-    button:active{
-        background-color: #ffffff30;
+    .button-formula:active{
+        background-color: #81aaba;
     }
 }
 .options{
