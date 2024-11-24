@@ -12,4 +12,6 @@ Supports:
 
   *> Moving around the virtual space*
 
+  *> Showing multiple graphs at one*
+
 ### Can be played [here](https://jan3385.github.io/GraphicCalculator/)
