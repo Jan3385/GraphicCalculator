@@ -5,6 +5,24 @@ body{
     background-color: rgb(232, 129, 129);
     transition: background-color 5s;
 }
+.info-text{
+    position: absolute;
+    left: 40px;
+    bottom: 6%;
+    transform: rotate(-90deg);
+    transform-origin: left bottom;
+    white-space: nowrap;
+    font-size: 2.5dvh;
+    color: #0000001a;
+    user-select: none;
+    font-weight: 900;
+    font-family: monospace;
+}
+@media (max-width: 480px) {
+    .info-text{
+        display: none;
+    }
+}
 .container{
     width: min-content;
     margin: 2.5svh auto 0 auto;
