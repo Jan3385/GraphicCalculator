@@ -145,7 +145,7 @@ body{
     .ResetViewButton{
         grid-column: 3 / span 1;
         grid-row: 2 / span 2;
-        height: fit-content;
+        height: max(fit-content, 100%);
     }
     input{
         width: max(80%, 20px);
