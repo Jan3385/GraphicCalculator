@@ -19,8 +19,8 @@ function handleCanvasMouseWheel(event) {
 }
 function handleCanvasMouseMove(event){
     if(event.buttons & 1 == 1){
-        canvasOffset[0] += event.movementX/40;
-        canvasOffset[1] += event.movementY/40;
+        canvasOffset[0] += event.movementX/document.getElementById("xScale").value;
+        canvasOffset[1] += event.movementY/document.getElementById("yScale").value;
         DrawGraph();
     }
 }
@@ -182,8 +182,8 @@ function DrawGraphBackground(){
 
     //numbers on x axis
     ctx.lineWidth = 1;
-    const xStart = (-250/xScale);
-    const yLineOffset = Math.min(Math.max(canvasOffset[1]*yScale, -145), 125);
+    const xStart = (-(canvas.width/2)/xScale);
+    const yLineOffset = Math.min(Math.max(canvasOffset[1]*yScale, -(canvas.height/2-5)), (canvas.height/2-25));
     for(let x = xStart + (canvasOffset[0]%1); x <= -xStart; x+= 1){
 
         //number lines
@@ -206,8 +206,8 @@ function DrawGraphBackground(){
     ctx.textAlign = "right";
     ctx.beginPath();
 
-    const yStart = -250/yScale;
-    const xLineOffset = Math.min(Math.max(canvasOffset[0]*xScale, -210), 248);
+    const yStart = -(canvas.height/2)/yScale;
+    const xLineOffset = Math.min(Math.max(canvasOffset[0]*xScale, -(canvas.width/2 - 40)), (canvas.width/2 - 2));
     for(let y = yStart + (canvasOffset[1]%1); y <= -yStart; y+= 1){
         //number lines
         ctx.fillRect(halfWidth - 3  + xLineOffset, halfHeight + y * yScale, 6, 1);
@@ -237,17 +237,19 @@ let PreviousLinePos = [0, 0];
 function DrawGraph(){
     shouldDrawGraphSlowly = false;
     DrawGraphBackground();
-    let canvas = document.getElementById("graph-canvas");
-    let ctx = canvas.getContext("2d");
+    const canvas = document.getElementById("graph-canvas");
+    const ctx = canvas.getContext("2d");
 
     const halfWidth = canvas.width / 2;
     const halfHeight = canvas.height / 2;
     const yScale = document.getElementById("yScale").value <= 0 ? 1 : document.getElementById("yScale").value;
     const xScale = document.getElementById("xScale").value <= 0 ? 1 : document.getElementById("xScale").value;
-    const xStart = -250/xScale;
+    const xStart = -(canvas.width/2)/xScale;
 
     //render graphs
-    const graphStep = formulas <= 3 ? 0.03 : 0.01*formulas.length;
+    let graphStep = formulas <= 3 ? 0.1 : 0.03*formulas.length;
+    //graphStep = graphStep * canvas.width / 500;
+
     try{
         for(const formula of formulas){
             ctx.beginPath();
@@ -257,10 +259,11 @@ function DrawGraph(){
             for(let x = xStart-canvasOffset[0]; x < -xStart-canvasOffset[0]; x += graphStep){
                 
                 let y = eval(formula);
+
                 const xPos = halfWidth + (x+canvasOffset[0]) * xScale;
                 const yPos = halfHeight - (y-canvasOffset[1]) * yScale;
                 //dont draw if the distance is too extreme (prevents false drawing when going from one infinity to another (eg. 1/x))
-                if(Math.abs(PreviousLinePos[1] - yPos) < Math.abs(yScale * 100))
+                if((Math.sign(PreviousLinePos[1] == Math.sign(yPos)) || Math.abs(PreviousLinePos[1] - yPos) < Math.abs(canvas.height*0.8)))
                     ctx.lineTo(xPos, yPos+canvasOffset[1]);
                 else
                     ctx.moveTo(xPos, yPos+canvasOffset[1]);
@@ -284,14 +287,16 @@ async function DrawGraphSlowly(){
     const halfHeight = canvas.height / 2;
     const yScale = document.getElementById("yScale").value <= 0 ? 1 : document.getElementById("yScale").value;
     const xScale = document.getElementById("xScale").value <= 0 ? 1 : document.getElementById("xScale").value;
-    const xStart = -250/xScale;
-    const yStart = -250/yScale;
+    const xStart = -(canvas.width/2)/xScale;
+    const yStart = -(canvas.height/2)/yScale;
 
     //render graph
     ctx.strokeStyle = "#2d3436";
     ctx.beginPath();
     ctx.lineWidth = 2;
 
+    let graphStep = formulas <= 3 ? 0.010 : 0.0030*formulas.length;
+    //graphStep = graphStep * canvas.width / 500;
     //try to render the graph
     try{
         for(const formula of formulas){
@@ -299,14 +304,14 @@ async function DrawGraphSlowly(){
             const transparency = formula == GetActiveFormula() ? (255).toString(16) : (180).toString(16);
             ctx.strokeStyle = formulaColors[formulas.indexOf(formula)%formulaColors.length] + transparency;
             ctx.lineWidth = 2;
-            for(let x = xStart-canvasOffset[0]; x < -xStart-canvasOffset[0]; x += 0.01*formulas.length){
+            for(let x = xStart-canvasOffset[0]; x < -xStart-canvasOffset[0]; x += graphStep){
                 if(!shouldDrawGraphSlowly) return
 
                 let y = eval(formula);
                 const xPos = halfWidth + (x+canvasOffset[0]) * xScale;
                 const yPos = halfHeight - (y-canvasOffset[1]) * yScale;
                 //dont draw if the distance is too extreme (prevents false drawing when going from one infinity to another (eg. 1/x))
-                if(Math.abs(PreviousLinePos[1] - yPos) < Math.abs(yScale * 100))
+                if(Math.sign(PreviousLinePos[1] == Math.sign(yPos)) || Math.abs(PreviousLinePos[1] - yPos) < Math.abs(canvas.height*0.8))
                     ctx.lineTo(xPos, yPos);
                 else
                     ctx.moveTo(xPos, yPos);
@@ -314,7 +319,7 @@ async function DrawGraphSlowly(){
 
                 //only await when drawing visible part of the graph
                 if(y > yStart && y < -yStart){
-                    await new Promise(r => setTimeout(r, xScale/10));
+                    await new Promise(r => setTimeout(r, xScale/20));
                 }
                 ctx.stroke();
             }
@@ -326,6 +331,44 @@ async function DrawGraphSlowly(){
         shouldDrawGraphSlowly = false;
     }
 }
+
+function SetGraphFullscreen(){
+    let canvasDiv = document.getElementById("canvas-div");
+    let fullscreenNav = document.getElementById("fullscreen-nav");
+    let canvas = document.getElementById("graph-canvas");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    if (canvasDiv.requestFullscreen) {
+        canvasDiv.requestFullscreen();
+    } else if (canvasDiv.webkitRequestFullscreen) { /* Safari */
+        canvasDiv.webkitRequestFullscreen();
+    } else if (canvasDiv.msRequestFullscreen) { /* IE11 */
+        canvasDiv.msRequestFullscreen();
+    }
+
+    document.getElementById("yScale").value = Math.round(document.getElementById("yScale").value*2.32);
+    document.getElementById("xScale").value = Math.round(document.getElementById("xScale").value*2.32);
+
+    canvasDiv.onfullscreenchange = (event) => {
+        if(!document.fullscreenElement){
+            canvas.width = 500;
+            canvas.height = 300;
+            fullscreenNav.style.display = "none";
+
+            document.getElementById("yScale").value = Math.round(document.getElementById("yScale").value/2.32);
+            document.getElementById("xScale").value = Math.round(document.getElementById("xScale").value/2.32);
+
+            DrawGraph();
+        }    
+    };
+    fullscreenNav.style.display = "grid";
+    DrawGraph();
+}
+function ExitFullscreen(){
+    document.exitFullscreen();
+}
+
 const backgroundColors = [
     "#e67d7c",
     "#fab1a0",

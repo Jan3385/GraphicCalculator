@@ -33,12 +33,6 @@ body{
     border-radius: 10px;
     border: solid #e2e2e2 6px;
 }
-canvas{
-    margin: auto;
-    display: block;
-    background-color: black;
-    width: 40vmin;
-}
 .info{
     color: #b6b6b6;
     padding: 0;
@@ -151,6 +145,7 @@ canvas{
     .ResetViewButton{
         grid-column: 3 / span 1;
         grid-row: 2 / span 2;
+        height: fit-content;
     }
     input{
         width: max(80%, 20px);
@@ -240,4 +235,58 @@ canvas{
     .special:active{
         background-color: #bbbbbb;
     }
+}
+.fullscreen-nav{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 12vh;
+    z-index: 100;
+    background-color: #00000000;
+    display: none; /* grid */
+    grid-template-columns: 1fr 1fr 1fr;
+    padding-bottom: 5px;
+    button{
+        width: 98%;
+        height: 100%;
+        margin: auto;
+        padding: 5px;
+        border: solid #b8b8b8b4 4px;
+        color: rgb(81, 81, 81);
+        font-size: 3vmin;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: #f4f4f440;
+        transition: background-color 0.2s;
+    }
+    button:hover{
+        background-color: #e5e5e5bd;
+    }
+    button:active{
+        background-color: #ffffff;
+    }
+}
+.fullscreen-button{
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    padding: 2px;
+    border: solid #e5e5e5 4px;
+    color: rgb(81, 81, 81);
+    font-size: 10px;
+    border-radius: 4px;
+}
+.fullscreen-button:hover{
+    background-color: #e5e5e5;
+    border: solid #b8b8b8 4px;
+}
+.fullscreen-button:active{
+    background-color: #ffffff;
+}
+canvas{
+    margin: auto;
+    background-color: black;
+    width: 100%;
+    height: 100%;
 }

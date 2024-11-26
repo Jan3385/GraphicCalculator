@@ -8,10 +8,18 @@
     <title>Graphical Calculator</title>
 </head>
 <body>
-    <h1 class="info-text">Graphing Calculator - By Hat Dealer - Update 3 (Multiple Graphs)</h1>
+    <h1 class="info-text">Graphing Calculator - By Hat Dealer - Update 4 (Fullscreen Graph)</h1>
     <div class="container">
         <p class="info">(Try dragging and scrolling on the canvas!)</p>
-        <canvas height="300px" width="500px" id="graph-canvas" onmousewheel="handleCanvasMouseWheel(event)" onmousemove="handleCanvasMouseMove(event)"></canvas>
+        <div id="canvas-div">
+            <canvas height="300px" width="500px" id="graph-canvas" onmousewheel="handleCanvasMouseWheel(event)" onmousemove="handleCanvasMouseMove(event)"></canvas>
+            <div class="fullscreen-nav" id="fullscreen-nav">
+                <button onclick="DrawGraphSlowly()">Graph Slowly</button>
+                <button onclick="ResetView()">Reset View</button>
+                <button onclick="ExitFullscreen()">Exit Fullscreen</button>
+            </div>
+        </div>
+        <button class="fullscreen-button" onclick="SetGraphFullscreen()">fullscreen</button>
         <div class="formulas" id="formula-display">
             <div class="formulas-list">
                 <div class="formula-div" id="form0">
